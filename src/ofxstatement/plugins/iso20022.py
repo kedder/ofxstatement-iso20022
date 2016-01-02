@@ -16,7 +16,7 @@ class Iso20022Plugin(Plugin):
     """ISO-20022 plugin
     """
 
-    def getParser(self, filename):
+    def get_parser(self, filename):
         return Iso20022Parser(filename)
 
 

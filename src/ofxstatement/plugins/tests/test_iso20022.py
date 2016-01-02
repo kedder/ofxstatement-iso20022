@@ -14,7 +14,7 @@ def test_parse_simple():
     # GIVEN
     plugin = Iso20022Plugin(UI(), {})
 
-    parser = plugin.getParser(os.path.join(SAMPLES_DIR, 'simple.xml'))
+    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, 'simple.xml'))
 
     # WHEN
     stmt = parser.parse()
