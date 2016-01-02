@@ -32,7 +32,7 @@ setup(name='ofxstatement-iso20022',
       namespace_packages=["ofxstatement", "ofxstatement.plugins"],
       entry_points={
           'ofxstatement':
-          ['iso20022 = ofxstatement.plugins.iso20022:Iso2022Plugin']
+          ['iso20022 = ofxstatement.plugins.iso20022:Iso20022Plugin']
           },
       install_requires=['ofxstatement'],
       extras_require={"test": ["pytest"]},
