@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Document xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>165999526</MsgId>
+      <CreDtTm>2016-01-01T18:40:37</CreDtTm>
+    </GrpHdr>
+    <Stmt>
+      <Id>LT000000000000000000EUR000000000</Id>
+      <ElctrncSeqNb>100001</ElctrncSeqNb>
+      <CreDtTm>2016-01-01T18:40:37</CreDtTm>
+      <FrToDt>
+        <FrDtTm>2015-12-01T00:00:01</FrDtTm>
+        <ToDtTm>2015-12-31T23:59:59</ToDtTm>
+      </FrToDt>
+      <Acct>
+        <Id>
+          <IBAN>LT000000000000000000</IBAN>
+        </Id>
+        <Ccy>EUR</Ccy>
+        <Ownr>
+          <Nm>John Doe</Nm>
+          <PstlAdr>
+            <StrtNm>Times Square, London</StrtNm>
+          </PstlAdr>
+          <Id>
+            <PrvtId>
+              <Othr>
+                <Id>11111111111</Id>
+                <SchmeNm>
+                  <Cd>NIDN</Cd>
+                </SchmeNm>
+              </Othr>
+            </PrvtId>
+          </Id>
+        </Ownr>
+        <Svcr>
+          <FinInstnId>
+            <BIC>AGBLLT2XXXX</BIC>
+            <Nm>AB DNB bankas</Nm>
+            <Othr>
+              <Id>112029270</Id>
+              <SchmeNm>
+                <Cd>COID</Cd>
+              </SchmeNm>
+            </Othr>
+          </FinInstnId>
+        </Svcr>
+      </Acct>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>OPBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="EUR">306.53</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2015-12-01</Dt>
+        </Dt>
+      </Bal>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>CLBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="EUR">125.52</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2015-12-31</Dt>
+        </Dt>
+      </Bal>
+      <TxsSummry>
+        <TtlCdtNtries>
+          <Sum>0</Sum>
+        </TtlCdtNtries>
+        <TtlDbtNtries>
+          <Sum>181.01</Sum>
+        </TtlDbtNtries>
+      </TxsSummry>
+      <Ntry>
+        <Amt Ccy="EUR">0.29</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt>
+          <DtTm>2015-12-31T00:00:00</DtTm>
+        </BookgDt>
+        <ValDt>
+          <Dt>2016-01-01</Dt>
+        </ValDt>
+        <BkTxCd>
+          <Domn>
+            <Cd>ACMT</Cd>
+            <Fmly>
+              <Cd>OTHR</Cd>
+              <SubFmlyCd>OTHR</SubFmlyCd>
+            </Fmly>
+          </Domn>
+          <Prtry>
+            <Cd>I06</Cd>
+          </Prtry>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>FC1261858984</AcctSvcrRef>
+              <InstrId>LTUH459EUR 00001</InstrId>
+              <EndToEndId>NOTPROVIDED</EndToEndId>
+            </Refs>
+            <AmtDtls>
+              <InstdAmt>
+                <Amt Ccy="EUR">0.29</Amt>
+              </InstdAmt>
+              <TxAmt>
+                <Amt Ccy="EUR">0.29</Amt>
+              </TxAmt>
+              <PrtryAmt>
+                <Tp>EQUIVALENT</Tp>
+                <Amt Ccy="EUR">0.29</Amt>
+              </PrtryAmt>
+            </AmtDtls>
+            <RltdPties>
+              <Cdtr>
+                <Nm>AB DNB Bankas</Nm>
+              </Cdtr>
+            </RltdPties>
+            <RmtInf>
+              <Ustrd>Sąskaitos aptarnavimo mokestis</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <Amt Ccy="EUR">0.29</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt>
+          <DtTm>2015-12-31T01:12:39</DtTm>
+        </BookgDt>
+        <ValDt>
+          <Dt>2015-12-31</Dt>
+        </ValDt>
+        <BkTxCd>
+          <Domn>
+            <Cd>PMNT</Cd>
+            <Fmly>
+              <Cd>ICDT</Cd>
+              <SubFmlyCd>BOOK</SubFmlyCd>
+            </Fmly>
+          </Domn>
+          <Prtry>
+            <Cd>F33</Cd>
+          </Prtry>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>FC1262466699</AcctSvcrRef>
+              <InstrId>LTUZMLT153650UMP</InstrId>
+              <EndToEndId>NOTPROVIDED</EndToEndId>
+            </Refs>
+            <AmtDtls>
+              <InstdAmt>
+                <Amt Ccy="EUR">0.29</Amt>
+              </InstdAmt>
+              <TxAmt>
+                <Amt Ccy="EUR">0.29</Amt>
+              </TxAmt>
+              <PrtryAmt>
+                <Tp>EQUIVALENT</Tp>
+                <Amt Ccy="EUR">0.29</Amt>
+              </PrtryAmt>
+            </AmtDtls>
+            <RltdPties>
+              <Cdtr>
+                <Nm>AB DNB Bankas</Nm>
+              </Cdtr>
+            </RltdPties>
+            <RmtInf>
+              <Ustrd>Lėšų pervedimas į/iš LT11111111111111111 EUR pagal Nr. LTUH459EUR 00001 </Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <Amt Ccy="EUR">28.19</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt>
+          <DtTm>2015-12-31T02:00:31</DtTm>
+        </BookgDt>
+        <ValDt>
+          <Dt>2015-12-31</Dt>
+        </ValDt>
+        <BkTxCd>
+          <Domn>
+            <Cd>LDAS</Cd>
+            <Fmly>
+              <Cd>MDOP</Cd>
+              <SubFmlyCd>INTR</SubFmlyCd>
+            </Fmly>
+          </Domn>
+          <Prtry>
+            <Cd>L16</Cd>
+          </Prtry>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>FC1260573114</AcctSvcrRef>
+              <InstrId>279-06IL</InstrId>
+              <EndToEndId>NOTPROVIDED</EndToEndId>
+            </Refs>
+            <AmtDtls>
+              <InstdAmt>
+                <Amt Ccy="EUR">28.19</Amt>
+              </InstdAmt>
+              <TxAmt>
+                <Amt Ccy="EUR">28.19</Amt>
+              </TxAmt>
+              <PrtryAmt>
+                <Tp>EQUIVALENT</Tp>
+                <Amt Ccy="EUR">28.19</Amt>
+              </PrtryAmt>
+            </AmtDtls>
+            <RltdPties>
+              <Cdtr>
+                <Nm>AB DNB Bankas</Nm>
+              </Cdtr>
+            </RltdPties>
+            <RmtInf>
+              <Ustrd>Transfer description</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <Amt Ccy="EUR">152.24</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt>
+          <DtTm>2015-12-31T02:00:31</DtTm>
+        </BookgDt>
+        <ValDt>
+          <Dt>2015-12-31</Dt>
+        </ValDt>
+        <BkTxCd>
+          <Domn>
+            <Cd>LDAS</Cd>
+            <Fmly>
+              <Cd>FTLN</Cd>
+              <SubFmlyCd>RIMB</SubFmlyCd>
+            </Fmly>
+          </Domn>
+          <Prtry>
+            <Cd>L06</Cd>
+          </Prtry>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>FC1260573115</AcctSvcrRef>
+              <InstrId>279-06IL</InstrId>
+              <EndToEndId>NOTPROVIDED</EndToEndId>
+            </Refs>
+            <AmtDtls>
+              <InstdAmt>
+                <Amt Ccy="EUR">152.24</Amt>
+              </InstdAmt>
+              <TxAmt>
+                <Amt Ccy="EUR">152.24</Amt>
+              </TxAmt>
+              <PrtryAmt>
+                <Tp>EQUIVALENT</Tp>
+                <Amt Ccy="EUR">152.24</Amt>
+              </PrtryAmt>
+            </AmtDtls>
+            <RltdPties>
+              <Cdtr>
+                <Nm>AB DNB Bankas</Nm>
+              </Cdtr>
+            </RltdPties>
+            <RmtInf>
+              <Ustrd>Payment description</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>
