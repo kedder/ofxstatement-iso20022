@@ -35,6 +35,7 @@ setup(name='ofxstatement-iso20022',
           ['iso20022 = ofxstatement.plugins.iso20022:Iso2022Plugin']
           },
       install_requires=['ofxstatement'],
+      extras_require={"test": ["pytest"]},
       include_package_data=True,
       zip_safe=True
       )
