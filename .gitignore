@@ -10,3 +10,5 @@ eggs
 .project
 .pydevproject
 *.sublime*
+.cache
+.requirements.installed
