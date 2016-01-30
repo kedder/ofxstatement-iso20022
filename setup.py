@@ -4,7 +4,7 @@
 from setuptools import find_packages
 from distutils.core import setup
 
-version = "0.5.0dev1"
+version = "0.1.0"
 
 with open('README.rst') as f:
     long_description = f.read()
@@ -17,7 +17,7 @@ setup(name='ofxstatement-iso20022',
       description=("ISO-20022 plugin for ofxstatement"),
       long_description=long_description,
       license="GPLv3",
-      keywords=["ofx", "banking", "statement"],
+      keywords=["ofx", "banking", "statement", 'iso-20022'],
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Programming Language :: Python :: 3',
