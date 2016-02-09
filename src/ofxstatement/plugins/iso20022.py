@@ -76,6 +76,11 @@ class Iso20022Parser(object):
         amt = self._parse_amount(amtnode, self.statement.currency)
         if crdeb == CD_DEBIT:
             amt = -amt
+            payee = _find(ntry, 'NtryDtls/TxDtls/RltdPties/Cdtr/Nm')
+        else:
+            payee = _find(ntry, 'NtryDtls/TxDtls/RltdPties/Dbtr/Nm')
+
+        sline.payee = payee
         sline.amount = amt
 
         dt = _find(ntry, 'ValDt')
@@ -89,9 +94,6 @@ class Iso20022Parser(object):
 
         rmtinf = _find(ntry, 'NtryDtls/TxDtls/RmtInf/Ustrd')
         sline.memo = rmtinf.text
-
-        cdtr = _find(ntry, 'NtryDtls/TxDtls/RltdPties/Cdtr/Nm')
-        sline.payee = cdtr.text
 
         return sline
 
