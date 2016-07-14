@@ -80,7 +80,7 @@ class Iso20022Parser(object):
         else:
             payee = _find(ntry, 'NtryDtls/TxDtls/RltdPties/Dbtr/Nm')
 
-        sline.payee = payee
+        sline.payee = payee.text
         sline.amount = amt
 
         dt = _find(ntry, 'ValDt')
