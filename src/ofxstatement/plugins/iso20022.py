@@ -43,6 +43,7 @@ class Iso20022Parser(object):
         ccy =stmt.find('./s:Acct/s:Ccy', XMLNS)
         bals = stmt.findall('./s:Bal', XMLNS)
 
+        acctCurrency = ccy.text if ccy is not None else None
         bal_amts = {}
         bal_dates = {}
         for bal in bals:
@@ -51,11 +52,11 @@ class Iso20022Parser(object):
             dt = bal.find('./s:Dt', XMLNS)
 
             # Amount currency should match with statement currency
-            bal_amts[cd.text] = self._parse_amount(amt, ccy.text)
+            bal_amts[cd.text] = self._parse_amount(amt, acctCurrency)
             bal_dates[cd.text] = self._parse_date(dt)
 
-        self.statement.currency = ccy.text
-        self.statement.bank_id = bnk.text
+        self.statement.currency = acctCurrency
+        self.statement.bank_id = bnk.text if bnk is not None else None
         self.statement.account_id = iban.text
         self.statement.start_balance = bal_amts['OPBD']
         self.statement.start_date = bal_dates['OPBD']
@@ -80,7 +81,7 @@ class Iso20022Parser(object):
         else:
             payee = _find(ntry, 'NtryDtls/TxDtls/RltdPties/Dbtr/Nm')
 
-        sline.payee = payee.text
+        sline.payee = payee.text if payee is not None else None
         sline.amount = amt
 
         dt = _find(ntry, 'ValDt')
@@ -92,8 +93,13 @@ class Iso20022Parser(object):
         svcref = _find(ntry, 'NtryDtls/TxDtls/Refs/AcctSvcrRef')
         sline.refnum = svcref.text
 
+        # Try to find memo from different possible locations
         rmtinf = _find(ntry, 'NtryDtls/TxDtls/RmtInf/Ustrd')
-        sline.memo = rmtinf.text
+        addinf = _find(ntry, 'AddtlNtryInf')
+        if rmtinf is not None:
+            sline.memo = rmtinf.text
+        elif addinf is not None:
+            sline.memo = addinf.text
 
         return sline
 
@@ -111,7 +117,8 @@ class Iso20022Parser(object):
             return datetime.datetime.strptime(dttm.text, "%Y-%m-%dT%H:%M:%S")
 
     def _parse_amount(self, amtnode, currency):
-        assert amtnode.get('Ccy') == currency
+        if currency:
+            assert amtnode.get('Ccy') == currency
         return float(amtnode.text)
 
 
