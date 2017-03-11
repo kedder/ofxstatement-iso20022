@@ -1,8 +1,10 @@
 import os
 import datetime
 
-from ofxstatement.ui import UI
+import pytest
 
+from ofxstatement import exceptions
+from ofxstatement.ui import UI
 from ofxstatement.plugins.iso20022 import Iso20022Plugin
 
 
@@ -44,9 +46,22 @@ def test_parse_simple():
     assert line0.refnum == 'FC1261858984'
 
 
-def test_parse_gcamp6():
+def test_parse_unconfigured_currency():
     # GIVEN
     plugin = Iso20022Plugin(UI(), {})
+    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, 'gcamp6.xml'))
+
+    # WHEN
+    with pytest.raises(exceptions.ParseError):
+        stmt = parser.parse()
+
+
+def test_parse_gcamp6():
+    # GIVEN
+    config = {
+        "currency": "XXX"
+    }
+    plugin = Iso20022Plugin(UI(), config)
 
     parser = plugin.get_parser(os.path.join(SAMPLES_DIR, 'gcamp6.xml'))
 
@@ -58,7 +73,7 @@ def test_parse_gcamp6():
     assert stmt is not None
 
     assert stmt.account_id == 'CH2609000000924238861'
-    assert stmt.currency is None
+    assert stmt.currency is "XXX"
 
     assert stmt.bank_id is None
     assert stmt.end_balance == 10000.0

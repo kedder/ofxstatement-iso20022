@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import datetime
 
+from ofxstatement import exceptions
 from ofxstatement.plugin import Plugin
 from ofxstatement.statement import Statement, StatementLine
 
@@ -17,17 +18,21 @@ class Iso20022Plugin(Plugin):
     """
 
     def get_parser(self, filename):
-        return Iso20022Parser(filename)
+        default_ccy = self.settings.get('currency')
+        parser = Iso20022Parser(filename, currency=default_ccy)
+        return parser
 
 
 class Iso20022Parser(object):
-    def __init__(self, filename):
+    def __init__(self, filename, currency=None):
         self.filename = filename
+        self.currency = currency
 
     def parse(self):
         """Main entry point for parsers
         """
         self.statement = Statement()
+        self.statement.currency = self.currency
         tree = ET.parse(self.filename)
 
         self._parse_statement_properties(tree)
@@ -44,18 +49,28 @@ class Iso20022Parser(object):
         bals = stmt.findall('./s:Bal', XMLNS)
 
         acctCurrency = ccy.text if ccy is not None else None
+        if acctCurrency:
+            self.statement.currency = acctCurrency
+        else:
+            if self.statement.currency is None:
+                raise exceptions.ParseError(
+                    0, "No account currency provided in statement. Please "
+                    "specify one in configuration file (e.g. currency=EUR)")
+
         bal_amts = {}
         bal_dates = {}
         for bal in bals:
             cd = bal.find('./s:Tp/s:CdOrPrtry/s:Cd', XMLNS)
             amt = bal.find('./s:Amt', XMLNS)
             dt = bal.find('./s:Dt', XMLNS)
-
+            amt_ccy = amt.get('Ccy')
             # Amount currency should match with statement currency
-            bal_amts[cd.text] = self._parse_amount(amt, acctCurrency)
+            if amt_ccy != self.statement.currency:
+                continue
+
+            bal_amts[cd.text] = self._parse_amount(amt)
             bal_dates[cd.text] = self._parse_date(dt)
 
-        self.statement.currency = acctCurrency
         self.statement.bank_id = bnk.text if bnk is not None else None
         self.statement.account_id = iban.text
         self.statement.start_balance = bal_amts['OPBD']
@@ -66,7 +81,8 @@ class Iso20022Parser(object):
     def _parse_lines(self, tree):
         for ntry in _findall(tree, 'BkToCstmrStmt/Stmt/Ntry'):
             sline = self._parse_line(ntry)
-            self.statement.lines.append(sline)
+            if sline is not None:
+                self.statement.lines.append(sline)
 
     def _parse_line(self, ntry):
         sline = StatementLine()
@@ -74,7 +90,14 @@ class Iso20022Parser(object):
         crdeb = _find(ntry, 'CdtDbtInd').text
 
         amtnode = _find(ntry, 'Amt')
-        amt = self._parse_amount(amtnode, self.statement.currency)
+        amt_ccy = amtnode.get('Ccy')
+
+        if amt_ccy != self.statement.currency:
+            # We can't include amounts with incompatible currencies into the
+            # statement.
+            return None
+
+        amt = self._parse_amount(amtnode)
         if crdeb == CD_DEBIT:
             amt = -amt
             payee = _find(ntry, 'NtryDtls/TxDtls/RltdPties/Cdtr/Nm')
@@ -116,9 +139,7 @@ class Iso20022Parser(object):
             assert dttm is not None
             return datetime.datetime.strptime(dttm.text, "%Y-%m-%dT%H:%M:%S")
 
-    def _parse_amount(self, amtnode, currency):
-        if currency:
-            assert amtnode.get('Ccy') == currency
+    def _parse_amount(self, amtnode):
         return float(amtnode.text)
 
 
