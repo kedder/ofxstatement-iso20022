@@ -71,6 +71,11 @@ class Iso20022Parser(object):
             bal_amts[cd.text] = self._parse_amount(amt)
             bal_dates[cd.text] = self._parse_date(dt)
 
+        if not bal_amts:
+            raise exceptions.ParseError(
+                0, "No statement balance found for currency '%s'. Check "
+                "currency of statement file." % self.statement.currency)
+
         self.statement.bank_id = bnk.text if bnk is not None else None
         self.statement.account_id = iban.text
         self.statement.start_balance = bal_amts['OPBD']
