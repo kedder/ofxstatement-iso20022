@@ -140,9 +140,12 @@ class Iso20022Parser(object):
             sline.refnum = svcref.text
 
         # Try to find memo from different possible locations
+        refinf = self._find(ntry, 'NtryDtls/TxDtls/RmtInf/Strd/CdtrRefInf/Ref')
         rmtinf = self._find(ntry, 'NtryDtls/TxDtls/RmtInf/Ustrd')
         addinf = self._find(ntry, 'AddtlNtryInf')
-        if rmtinf is not None:
+        if refinf is not None:
+            sline.memo = refinf.text
+        elif rmtinf is not None:
             sline.memo = rmtinf.text
         elif addinf is not None:
             sline.memo = addinf.text
