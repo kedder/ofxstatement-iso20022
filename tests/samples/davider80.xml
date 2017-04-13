@@ -1,0 +1,465 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04">
+   <BkToCstmrStmt>
+      <GrpHdr>
+         <MsgId>MSG-C053-170412091216-01</MsgId>
+         <CreDtTm>2017-04-12T09:12:16.941+02:00</CreDtTm>
+         <AddtlInf>PRODUCTIVE</AddtlInf>
+      </GrpHdr>
+      <Stmt>
+         <Id>STM-C053-170412091216-01</Id>
+         <ElctrncSeqNb>2</ElctrncSeqNb>
+         <CreDtTm>2017-04-12T09:12:16.943+02:00</CreDtTm>
+         <FrToDt>
+            <FrDtTm>2017-04-01T00:00:00.000+02:00</FrDtTm>
+            <ToDtTm>2017-04-11T23:59:59.999+02:00</ToDtTm>
+         </FrToDt>
+         <Acct>
+            <Id>
+               <IBAN>CHxxxxxxxxxxxxxxxxxxx</IBAN>
+            </Id>
+            <Ownr>
+               <Nm>Sample Name</Nm>
+            </Ownr>
+            <Svcr>
+               <FinInstnId>
+                  <Nm>Raiffeisen</Nm>
+               </FinInstnId>
+            </Svcr>
+         </Acct>
+         <Bal>
+            <Tp>
+               <CdOrPrtry>
+                  <Cd>OPBD</Cd>
+               </CdOrPrtry>
+            </Tp>
+            <Amt Ccy="CHF">9433.31</Amt>
+            <CdtDbtInd>CRDT</CdtDbtInd>
+            <Dt>
+               <Dt>2017-04-01+02:00</Dt>
+            </Dt>
+         </Bal>
+         <Bal>
+            <Tp>
+               <CdOrPrtry>
+                  <Cd>CLBD</Cd>
+               </CdOrPrtry>
+            </Tp>
+            <Amt Ccy="CHF">5753.46</Amt>
+            <CdtDbtInd>CRDT</CdtDbtInd>
+            <Dt>
+               <Dt>2017-04-11+02:00</Dt>
+            </Dt>
+         </Bal>
+         <Ntry>
+            <Amt Ccy="CHF">905.3</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-01+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-03+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210564431020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>RDDT</Cd>
+                     <SubFmlyCd>PMDD</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AmtDtls>
+               <TxAmt>
+                  <Amt Ccy="CHF">905.3</Amt>
+               </TxAmt>
+            </AmtDtls>
+            <AddtlNtryInf>Sistema di addebitamento diretto xxxxxxxxxxxxxxxxxxxxxx AG</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">158.5</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-01+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-03+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210570781020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>NTAV</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AddtlNtryInf>Acquisto MIGROS M ARBEDO-CAST
+31.03.2017/13:30 / N. carta Maestro xxxxxxxx</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">38</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-02+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-03+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210610361020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>NTAV</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AddtlNtryInf>Acquisto LIDO + SPA LOCARNO
+01.04.2017/11:46 / N. carta Maestro xxxxxxxx</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">14.5</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-02+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-03+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210615161020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>NTAV</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AddtlNtryInf>Acquisto/tancomat City Castione 99
+31.03.2017/12:35 / N. carta Maestro xxxxxxxx</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">155.85</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-03+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-03+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210631311020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>ICDT</Cd>
+                     <SubFmlyCd>AUTT</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AmtDtls>
+               <TxAmt>
+                  <Amt Ccy="CHF">155.85</Amt>
+               </TxAmt>
+            </AmtDtls>
+            <AddtlNtryInf>E-banking Ordine (fattura elettronica)
+Aziende Municipalizzate Bellinzona</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">240</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-05+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-05+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210762411020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>ICDT</Cd>
+                     <SubFmlyCd>AUTT</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AmtDtls>
+               <TxAmt>
+                  <Amt Ccy="CHF">240</Amt>
+               </TxAmt>
+            </AmtDtls>
+            <AddtlNtryInf>E-banking Ordine a Paradiso Pulito</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">1395</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-05+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-05+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210762421020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>ICDT</Cd>
+                     <SubFmlyCd>AUTT</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AmtDtls>
+               <TxAmt>
+                  <Amt Ccy="CHF">1395</Amt>
+               </TxAmt>
+            </AmtDtls>
+            <AddtlNtryInf>E-banking Ordine a Huber-SchindlerAG Pilatusstrasse 29</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">49.7</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-05+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-05+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210790321020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>NTAV</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AddtlNtryInf>Acquisto/tancomat City Giubiasco 75
+04.04.2017/09:24 / N. carta Maestro xxxxxxxx</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">799.75</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-06+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-07+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210888941020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>RDDT</Cd>
+                     <SubFmlyCd>PMDD</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AmtDtls>
+               <TxAmt>
+                  <Amt Ccy="CHF">799.75</Amt>
+               </TxAmt>
+            </AmtDtls>
+            <AddtlNtryInf>Sistema di addebitamento diretto SWISSCARD AECS GMBH</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">136.6</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-08+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-10+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210949761020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>NTAV</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AddtlNtryInf>Acquisto MIGROS M ARBEDO-CAST
+07.04.2017/10:37 / N. carta Maestro xxxxxxxx</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">71.8</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-08+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-10+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210957461020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>NTAV</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AddtlNtryInf>Acquisto VOGELE SHOES / 150
+07.04.2017/09:27 / N. carta Maestro xxxxxxxx</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">18.1</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-09+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-10+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>210985971020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>NTAV</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AddtlNtryInf>Acquisto MIGROS MM BELLINZONA
+08.04.2017/16:15 / N. carta Maestro xxxxxxxx</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">368</Amt>
+            <CdtDbtInd>CRDT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-11+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-11+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>211067161010000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>RCDT</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AmtDtls>
+               <TxAmt>
+                  <Amt Ccy="CHF">368</Amt>
+               </TxAmt>
+            </AmtDtls>
+            <AddtlNtryInf>Accredito xxxxxxxxxxxxxx</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">13.95</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-11+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-11+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>211074161020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>NTAV</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AddtlNtryInf>Acquisto COOP-1489 BELLINZO
+10.04.2017/09:48 / N. carta Maestro xxxxxxxx</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">34</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-11+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-11+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>211085601020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>NTAV</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AddtlNtryInf>Acquisto TONI BALOCCHI SAGL
+08.04.2017/10:47 / N. carta Maestro xxxxxxxx</AddtlNtryInf>
+         </Ntry>
+         <Ntry>
+            <Amt Ccy="CHF">16.8</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RvslInd>false</RvslInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+               <Dt>2017-04-11+02:00</Dt>
+            </BookgDt>
+            <ValDt>
+               <Dt>2017-04-11+02:00</Dt>
+            </ValDt>
+            <AcctSvcrRef>211092231020000000024556150000</AcctSvcrRef>
+            <BkTxCd>
+               <Domn>
+                  <Cd>PMNT</Cd>
+                  <Fmly>
+                     <Cd>NTAV</Cd>
+                     <SubFmlyCd>NTAV</SubFmlyCd>
+                  </Fmly>
+               </Domn>
+            </BkTxCd>
+            <AddtlNtryInf>Acquisto/tancomat SOCAR VIA SAN GOTTAR
+09.04.2017/10:30 / N. carta Maestro xxxxxxxx</AddtlNtryInf>
+         </Ntry>
+      </Stmt>
+   </BkToCstmrStmt>
+</Document>
