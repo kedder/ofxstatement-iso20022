@@ -93,10 +93,23 @@ class Iso20022Parser(object):
 
         self.statement.bank_id = bnk.text if bnk is not None else None
         self.statement.account_id = iban.text
-        self.statement.start_balance = bal_amts['OPBD']
-        self.statement.start_date = bal_dates['OPBD']
-        self.statement.end_balance = bal_amts['CLBD']
-        self.statement.end_date = bal_dates['CLBD']
+        if 'OPBD' in bal_amts:
+            self.statement.start_balance = bal_amts['OPBD']
+            self.statement.start_date = bal_dates['OPBD']
+        elif 'PRCD' in bal_amts:
+            self.statement.start_balance = bal_amts['PRCD']
+            self.statement.start_date = bal_dates['PRCD']
+        else:
+            raise exceptions.ParseError(
+                0, "No statement opening balance found for currency '%s'. Check "
+                "currency of statement file." % self.statement.currency)
+        if 'CLBD' in bal_amts:
+            self.statement.end_balance = bal_amts['CLBD']
+            self.statement.end_date = bal_dates['CLBD']
+        else:
+            raise exceptions.ParseError(
+                0, "No statement closing balance found for currency '%s'. Check "
+                "currency of statement file." % self.statement.currency)
 
     def _parse_lines(self, tree):
         for ntry in self._findall(tree, 'BkToCstmrStmt/Stmt/Ntry'):
