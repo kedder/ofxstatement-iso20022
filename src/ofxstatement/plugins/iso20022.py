@@ -149,7 +149,10 @@ class Iso20022Parser(object):
         svcref = self._find(ntry, 'NtryDtls/TxDtls/Refs/AcctSvcrRef')
         if svcref is None:
             svcref = self._find(ntry, 'AcctSvcrRef')
-        sline.refnum = svcref.text
+        if svcref is None:
+            svcref = self._find(ntry, 'NtryDtls/TxDtls/Refs/MsgId')
+        if svcref is not None:
+            sline.refnum = svcref.text
 
         # Try to find memo from different possible locations
         rmtinf = self._find(ntry, 'NtryDtls/TxDtls/RmtInf/Ustrd')
