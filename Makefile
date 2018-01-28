@@ -16,3 +16,6 @@ all: .venv/bin/ofxstatement .requirements.installed
 
 test:
 	$(BIN)/py.test --capture=no
+
+clean:
+	rm -r .venv .requirements.installed
