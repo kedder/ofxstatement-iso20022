@@ -37,7 +37,7 @@ class Iso20022Parser(object):
         # Find out XML namespace and make sure we can parse it
         ns = self._get_namespace(tree.getroot())
         if not ns.startswith(ISO20022_NAMESPACE_ROOT):
-            raise ParseError("Cannot recognize ISO20022 XML")
+            raise exceptions.ParseError(0, "Cannot recognize ISO20022 XML")
 
         self.xmlns = {
             "s": ns

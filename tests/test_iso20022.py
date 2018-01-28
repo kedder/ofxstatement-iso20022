@@ -131,3 +131,18 @@ def test_parse_davider80():
     assert line0.date_user == datetime.datetime(2017, 4, 1, 0, 0)
     assert line0.payee is None
     assert line0.refnum == '210564431020000000024556150000'
+
+
+def test_unsupported():
+    # GIVEN
+    config = {
+        "currency": "CHF"
+    }
+    plugin = Iso20022Plugin(UI(), config)
+
+    # WHEN
+    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, 'unsupported.xml'))
+
+    # THEN
+    with pytest.raises(exceptions.ParseError):
+        parser.parse()
