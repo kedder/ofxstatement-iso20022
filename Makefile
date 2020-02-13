@@ -5,7 +5,7 @@ PIP=$(BIN)/pip
 all: .venv/bin/ofxstatement .requirements.installed
 
 .venv:
-	virtualenv -p python3 --no-site-packages .venv
+	python3 -m venv .venv
 
 .venv/bin/ofxstatement: .venv setup.py
 	$(PYTHON) setup.py develop
