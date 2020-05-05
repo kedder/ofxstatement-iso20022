@@ -50,7 +50,7 @@ class Iso20022Parser(object):
         return self.statement
 
     def _get_namespace(self, elem):
-        m = re.match('\{(.*)\}', elem.tag)
+        m = re.match(r'\{(.*)\}', elem.tag)
         return m.groups()[0] if m else ''
 
     def _parse_statement_properties(self, tree):
