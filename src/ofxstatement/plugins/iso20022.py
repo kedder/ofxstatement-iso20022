@@ -1,10 +1,13 @@
+from typing import Optional, List
 import xml.etree.ElementTree as ET
 import datetime
 import re
+from decimal import Decimal
 
 from ofxstatement import exceptions
 from ofxstatement.plugin import Plugin
 from ofxstatement.statement import Statement, StatementLine
+from ofxstatement.parser import AbstractStatementParser
 
 
 ISO20022_NAMESPACE_ROOT = "urn:iso:std:iso:20022:tech:xsd:camt.053.001"
@@ -16,18 +19,18 @@ CD_DEBIT = "DBIT"
 class Iso20022Plugin(Plugin):
     """ISO-20022 plugin"""
 
-    def get_parser(self, filename):
+    def get_parser(self, filename: str) -> "Iso20022Parser":
         default_ccy = self.settings.get("currency")
         parser = Iso20022Parser(filename, currency=default_ccy)
         return parser
 
 
-class Iso20022Parser(object):
-    def __init__(self, filename, currency=None):
+class Iso20022Parser(AbstractStatementParser):
+    def __init__(self, filename: str, currency: str = None):
         self.filename = filename
         self.currency = currency
 
-    def parse(self):
+    def parse(self) -> Statement:
         """Main entry point for parsers"""
         self.statement = Statement()
         self.statement.currency = self.currency
@@ -45,17 +48,19 @@ class Iso20022Parser(object):
 
         return self.statement
 
-    def _get_namespace(self, elem):
+    def _get_namespace(self, elem: ET.Element) -> str:
         m = re.match(r"\{(.*)\}", elem.tag)
         return m.groups()[0] if m else ""
 
-    def _parse_statement_properties(self, tree):
+    def _parse_statement_properties(self, tree: ET.ElementTree) -> None:
         stmt = tree.find("./s:BkToCstmrStmt/s:Stmt", self.xmlns)
+        assert stmt is not None
 
         bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:BIC", self.xmlns)
         if bnk is None:
             bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:Nm", self.xmlns)
         iban = stmt.find("./s:Acct/s:Id/s:IBAN", self.xmlns)
+        assert iban is not None
         ccy = stmt.find("./s:Acct/s:Ccy", self.xmlns)
         bals = stmt.findall("./s:Bal", self.xmlns)
 
@@ -76,6 +81,8 @@ class Iso20022Parser(object):
             cd = bal.find("./s:Tp/s:CdOrPrtry/s:Cd", self.xmlns)
             amt = bal.find("./s:Amt", self.xmlns)
             dt = bal.find("./s:Dt", self.xmlns)
+            assert cd is not None
+            assert amt is not None
             amt_ccy = amt.get("Ccy")
             # Amount currency should match with statement currency
             if amt_ccy != self.statement.currency:
@@ -98,18 +105,21 @@ class Iso20022Parser(object):
         self.statement.end_balance = bal_amts["CLBD"]
         self.statement.end_date = bal_dates["CLBD"]
 
-    def _parse_lines(self, tree):
-        for ntry in self._findall(tree, "BkToCstmrStmt/Stmt/Ntry"):
+    def _parse_lines(self, tree: ET.ElementTree) -> None:
+        stmt = tree.find("./s:BkToCstmrStmt/s:Stmt", self.xmlns)
+        assert stmt is not None
+
+        for ntry in self._findall(stmt, "Ntry"):
             sline = self._parse_line(ntry)
             if sline is not None:
                 self.statement.lines.append(sline)
 
-    def _parse_line(self, ntry):
+    def _parse_line(self, ntry: ET.Element) -> Optional[StatementLine]:
         sline = StatementLine()
 
-        crdeb = self._find(ntry, "CdtDbtInd").text
+        crdeb = self._findstrict(ntry, "CdtDbtInd").text
 
-        amtnode = self._find(ntry, "Amt")
+        amtnode = self._findstrict(ntry, "Amt")
         amt_ccy = amtnode.get("Ccy")
 
         if amt_ccy != self.statement.currency:
@@ -152,22 +162,22 @@ class Iso20022Parser(object):
 
         return sline
 
-    def _parse_date(self, dtnode):
+    def _parse_date(self, dtnode: Optional[ET.Element]) -> Optional[datetime.datetime]:
         if dtnode is None:
             return None
 
         dt = self._find(dtnode, "Dt")
         dttm = self._find(dtnode, "DtTm")
 
-        if dt is not None:
+        if dt is not None and dt.text is not None:
             dtvalue = self._notimezone(dt.text)
             return datetime.datetime.strptime(dtvalue, "%Y-%m-%d")
         else:
-            assert dttm is not None
+            assert dttm is not None and dttm.text is not None
             dtvalue = self._notimezone(dttm.text)
             return datetime.datetime.strptime(dtvalue, "%Y-%m-%dT%H:%M:%S")
 
-    def _notimezone(self, dt):
+    def _notimezone(self, dt: str) -> str:
         # Sometimes we are getting time with ridiculous timezone, like
         # "2017-04-01+02:00", which is unparseable by any python parsers. Strip
         # out such timezone for good.
@@ -176,17 +186,24 @@ class Iso20022Parser(object):
         dt, tz = dt.split("+")
         return dt
 
-    def _parse_amount(self, amtnode):
-        return float(amtnode.text)
+    def _parse_amount(self, amtnode: ET.Element) -> Decimal:
+        assert amtnode.text is not None
+        return Decimal(amtnode.text)
 
-    def _find(self, tree, spath):
+    def _find(self, tree: ET.Element, spath: str) -> Optional[ET.Element]:
         return tree.find(_toxpath(spath), self.xmlns)
 
-    def _findall(self, tree, spath):
+    def _findstrict(self, tree: ET.Element, spath: str) -> ET.Element:
+        found = self._find(tree, spath)
+        if found is None:
+            raise exceptions.ParseError(0, f"{spath} is not found in {tree}")
+        return found
+
+    def _findall(self, tree: ET.Element, spath: str) -> List[ET.Element]:
         return tree.findall(_toxpath(spath), self.xmlns)
 
 
-def _toxpath(spath):
+def _toxpath(spath: str) -> str:
     tags = spath.split("/")
     path = ["s:%s" % t for t in tags]
     xpath = "./%s" % "/".join(path)
