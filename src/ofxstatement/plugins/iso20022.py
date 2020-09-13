@@ -7,17 +7,17 @@ from ofxstatement.plugin import Plugin
 from ofxstatement.statement import Statement, StatementLine
 
 
-ISO20022_NAMESPACE_ROOT = 'urn:iso:std:iso:20022:tech:xsd:camt.053.001'
+ISO20022_NAMESPACE_ROOT = "urn:iso:std:iso:20022:tech:xsd:camt.053.001"
 
-CD_CREDIT = 'CRDT'
-CD_DEBIT = 'DBIT'
+CD_CREDIT = "CRDT"
+CD_DEBIT = "DBIT"
+
 
 class Iso20022Plugin(Plugin):
-    """ISO-20022 plugin
-    """
+    """ISO-20022 plugin"""
 
     def get_parser(self, filename):
-        default_ccy = self.settings.get('currency')
+        default_ccy = self.settings.get("currency")
         parser = Iso20022Parser(filename, currency=default_ccy)
         return parser
 
@@ -28,8 +28,7 @@ class Iso20022Parser(object):
         self.currency = currency
 
     def parse(self):
-        """Main entry point for parsers
-        """
+        """Main entry point for parsers"""
         self.statement = Statement()
         self.statement.currency = self.currency
         tree = ET.parse(self.filename)
@@ -39,10 +38,7 @@ class Iso20022Parser(object):
         if not ns.startswith(ISO20022_NAMESPACE_ROOT):
             raise exceptions.ParseError(0, "Cannot recognize ISO20022 XML")
 
-        self.xmlns = {
-            "s": ns
-        }
-
+        self.xmlns = {"s": ns}
 
         self._parse_statement_properties(tree)
         self._parse_lines(tree)
@@ -50,18 +46,18 @@ class Iso20022Parser(object):
         return self.statement
 
     def _get_namespace(self, elem):
-        m = re.match(r'\{(.*)\}', elem.tag)
-        return m.groups()[0] if m else ''
+        m = re.match(r"\{(.*)\}", elem.tag)
+        return m.groups()[0] if m else ""
 
     def _parse_statement_properties(self, tree):
-        stmt = tree.find('./s:BkToCstmrStmt/s:Stmt', self.xmlns)
+        stmt = tree.find("./s:BkToCstmrStmt/s:Stmt", self.xmlns)
 
-        bnk = stmt.find('./s:Acct/s:Svcr/s:FinInstnId/s:BIC', self.xmlns)
+        bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:BIC", self.xmlns)
         if bnk is None:
-            bnk = stmt.find('./s:Acct/s:Svcr/s:FinInstnId/s:Nm', self.xmlns)
-        iban = stmt.find('./s:Acct/s:Id/s:IBAN', self.xmlns)
-        ccy = stmt.find('./s:Acct/s:Ccy', self.xmlns)
-        bals = stmt.findall('./s:Bal', self.xmlns)
+            bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:Nm", self.xmlns)
+        iban = stmt.find("./s:Acct/s:Id/s:IBAN", self.xmlns)
+        ccy = stmt.find("./s:Acct/s:Ccy", self.xmlns)
+        bals = stmt.findall("./s:Bal", self.xmlns)
 
         acctCurrency = ccy.text if ccy is not None else None
         if acctCurrency:
@@ -69,16 +65,18 @@ class Iso20022Parser(object):
         else:
             if self.statement.currency is None:
                 raise exceptions.ParseError(
-                    0, "No account currency provided in statement. Please "
-                    "specify one in configuration file (e.g. currency=EUR)")
+                    0,
+                    "No account currency provided in statement. Please "
+                    "specify one in configuration file (e.g. currency=EUR)",
+                )
 
         bal_amts = {}
         bal_dates = {}
         for bal in bals:
-            cd = bal.find('./s:Tp/s:CdOrPrtry/s:Cd', self.xmlns)
-            amt = bal.find('./s:Amt', self.xmlns)
-            dt = bal.find('./s:Dt', self.xmlns)
-            amt_ccy = amt.get('Ccy')
+            cd = bal.find("./s:Tp/s:CdOrPrtry/s:Cd", self.xmlns)
+            amt = bal.find("./s:Amt", self.xmlns)
+            dt = bal.find("./s:Dt", self.xmlns)
+            amt_ccy = amt.get("Ccy")
             # Amount currency should match with statement currency
             if amt_ccy != self.statement.currency:
                 continue
@@ -88,18 +86,20 @@ class Iso20022Parser(object):
 
         if not bal_amts:
             raise exceptions.ParseError(
-                0, "No statement balance found for currency '%s'. Check "
-                "currency of statement file." % self.statement.currency)
+                0,
+                "No statement balance found for currency '%s'. Check "
+                "currency of statement file." % self.statement.currency,
+            )
 
         self.statement.bank_id = bnk.text if bnk is not None else None
         self.statement.account_id = iban.text
-        self.statement.start_balance = bal_amts['OPBD']
-        self.statement.start_date = bal_dates['OPBD']
-        self.statement.end_balance = bal_amts['CLBD']
-        self.statement.end_date = bal_dates['CLBD']
+        self.statement.start_balance = bal_amts["OPBD"]
+        self.statement.start_date = bal_dates["OPBD"]
+        self.statement.end_balance = bal_amts["CLBD"]
+        self.statement.end_date = bal_dates["CLBD"]
 
     def _parse_lines(self, tree):
-        for ntry in self._findall(tree, 'BkToCstmrStmt/Stmt/Ntry'):
+        for ntry in self._findall(tree, "BkToCstmrStmt/Stmt/Ntry"):
             sline = self._parse_line(ntry)
             if sline is not None:
                 self.statement.lines.append(sline)
@@ -107,10 +107,10 @@ class Iso20022Parser(object):
     def _parse_line(self, ntry):
         sline = StatementLine()
 
-        crdeb = self._find(ntry, 'CdtDbtInd').text
+        crdeb = self._find(ntry, "CdtDbtInd").text
 
-        amtnode = self._find(ntry, 'Amt')
-        amt_ccy = amtnode.get('Ccy')
+        amtnode = self._find(ntry, "Amt")
+        amt_ccy = amtnode.get("Ccy")
 
         if amt_ccy != self.statement.currency:
             # We can't include amounts with incompatible currencies into the
@@ -120,29 +120,29 @@ class Iso20022Parser(object):
         amt = self._parse_amount(amtnode)
         if crdeb == CD_DEBIT:
             amt = -amt
-            payee = self._find(ntry, 'NtryDtls/TxDtls/RltdPties/Cdtr/Nm')
+            payee = self._find(ntry, "NtryDtls/TxDtls/RltdPties/Cdtr/Nm")
         else:
-            payee = self._find(ntry, 'NtryDtls/TxDtls/RltdPties/Dbtr/Nm')
+            payee = self._find(ntry, "NtryDtls/TxDtls/RltdPties/Dbtr/Nm")
 
         sline.payee = payee.text if payee is not None else None
         sline.amount = amt
 
-        dt = self._find(ntry, 'ValDt')
+        dt = self._find(ntry, "ValDt")
         sline.date = self._parse_date(dt)
 
-        bookdt = self._find(ntry, 'BookgDt')
+        bookdt = self._find(ntry, "BookgDt")
         sline.date_user = self._parse_date(bookdt)
 
-        svcref = self._find(ntry, 'NtryDtls/TxDtls/Refs/AcctSvcrRef')
+        svcref = self._find(ntry, "NtryDtls/TxDtls/Refs/AcctSvcrRef")
         if svcref is None:
-            svcref = self._find(ntry, 'AcctSvcrRef')
+            svcref = self._find(ntry, "AcctSvcrRef")
         if svcref is not None:
             sline.refnum = svcref.text
 
         # Try to find memo from different possible locations
-        refinf = self._find(ntry, 'NtryDtls/TxDtls/RmtInf/Strd/CdtrRefInf/Ref')
-        rmtinf = self._find(ntry, 'NtryDtls/TxDtls/RmtInf/Ustrd')
-        addinf = self._find(ntry, 'AddtlNtryInf')
+        refinf = self._find(ntry, "NtryDtls/TxDtls/RmtInf/Strd/CdtrRefInf/Ref")
+        rmtinf = self._find(ntry, "NtryDtls/TxDtls/RmtInf/Ustrd")
+        addinf = self._find(ntry, "AddtlNtryInf")
         if refinf is not None:
             sline.memo = refinf.text
         elif rmtinf is not None:
@@ -156,8 +156,8 @@ class Iso20022Parser(object):
         if dtnode is None:
             return None
 
-        dt = self._find(dtnode, 'Dt')
-        dttm = self._find(dtnode, 'DtTm')
+        dt = self._find(dtnode, "Dt")
+        dttm = self._find(dtnode, "DtTm")
 
         if dt is not None:
             dtvalue = self._notimezone(dt.text)
@@ -185,9 +185,9 @@ class Iso20022Parser(object):
     def _findall(self, tree, spath):
         return tree.findall(_toxpath(spath), self.xmlns)
 
-def _toxpath(spath):
-    tags = spath.split('/')
-    path = ['s:%s' % t for t in tags]
-    xpath = './%s' % '/'.join(path)
-    return xpath
 
+def _toxpath(spath):
+    tags = spath.split("/")
+    path = ["s:%s" % t for t in tags]
+    xpath = "./%s" % "/".join(path)
+    return xpath
