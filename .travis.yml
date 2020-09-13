@@ -10,3 +10,4 @@ install:
 # command to run tests
 script:
   - pipenv run pytest
+  - pipenv run black --check setup.py src
