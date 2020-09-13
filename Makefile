@@ -10,4 +10,4 @@ mypy:
 
 .PHONY: black
 black:
-	black src setup.py
+	black src tests setup.py
