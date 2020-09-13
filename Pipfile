@@ -1,0 +1,14 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+
+[packages]
+pytest = "*"
+ofxstatement-iso20022 = {editable = true,path = "."}
+
+[requires]
+python_version = "3.8"
