@@ -7,7 +7,9 @@ verify_ssl = true
 pytest = "*"
 black = "*"
 dataclasses = "*"  # needed for black on python 3.6
+mypy = "*"
 
 [packages]
 pytest = "*"
 ofxstatement-iso20022 = {editable = true,path = "."}
+ofxstatement = "*"

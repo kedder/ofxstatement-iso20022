@@ -1,8 +1,12 @@
-all: test black
+all: test mypy black
 
 .PHONY: test
 test:
 	pytest
+
+.PHONY: mypy
+mypy:
+	mypy src tests
 
 .PHONY: black
 black:
