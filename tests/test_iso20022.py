@@ -10,14 +10,14 @@ from ofxstatement.plugins.iso20022 import Iso20022Plugin
 
 
 HERE = os.path.dirname(__file__)
-SAMPLES_DIR = os.path.join(HERE, 'samples')
+SAMPLES_DIR = os.path.join(HERE, "samples")
 
 
 def test_parse_simple() -> None:
     # GIVEN
     plugin = Iso20022Plugin(UI(), {})
 
-    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, 'simple.xml'))
+    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, "simple.xml"))
 
     # WHEN
     stmt = parser.parse()
@@ -25,9 +25,9 @@ def test_parse_simple() -> None:
     # THEN
     assert stmt is not None
 
-    assert stmt.account_id == 'LT000000000000000000'
-    assert stmt.currency == 'EUR'
-    assert stmt.bank_id == 'AGBLLT2XXXX'
+    assert stmt.account_id == "LT000000000000000000"
+    assert stmt.currency == "EUR"
+    assert stmt.bank_id == "AGBLLT2XXXX"
     assert stmt.end_balance == Decimal("125.52")
     assert stmt.end_date == datetime.datetime(2015, 12, 31, 0, 0)
     assert stmt.start_balance == Decimal("306.53")
@@ -40,17 +40,17 @@ def test_parse_simple() -> None:
     line0 = stmt.lines[0]
 
     assert line0.amount == Decimal("-0.29")
-    assert line0.memo == u'Sąskaitos aptarnavimo mokestis'
+    assert line0.memo == u"Sąskaitos aptarnavimo mokestis"
     assert line0.date == datetime.datetime(2016, 1, 1, 0, 0)
     assert line0.date_user == datetime.datetime(2015, 12, 31, 0, 0)
-    assert line0.payee == u'AB DNB Bankas'
-    assert line0.refnum == 'FC1261858984'
+    assert line0.payee == u"AB DNB Bankas"
+    assert line0.refnum == "FC1261858984"
 
 
 def test_parse_unconfigured_currency() -> None:
     # GIVEN
     plugin = Iso20022Plugin(UI(), {})
-    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, 'gcamp6.xml'))
+    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, "gcamp6.xml"))
 
     # WHEN
     with pytest.raises(exceptions.ParseError):
@@ -59,13 +59,10 @@ def test_parse_unconfigured_currency() -> None:
 
 def test_parse_gcamp6() -> None:
     # GIVEN
-    config = {
-        "currency": "XXX"
-    }
+    config = {"currency": "XXX"}
     plugin = Iso20022Plugin(UI(), config)
 
-    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, 'gcamp6.xml'))
-
+    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, "gcamp6.xml"))
 
     # WHEN
     stmt = parser.parse()
@@ -73,7 +70,7 @@ def test_parse_gcamp6() -> None:
     # THEN
     assert stmt is not None
 
-    assert stmt.account_id == 'CH2609000000924238861'
+    assert stmt.account_id == "CH2609000000924238861"
     assert stmt.currency is "XXX"
 
     assert stmt.bank_id is None
@@ -89,21 +86,19 @@ def test_parse_gcamp6() -> None:
     line0 = stmt.lines[0]
 
     assert line0.amount == Decimal("10000.0")
-    assert line0.memo == 'Account Transfer'
+    assert line0.memo == "Account Transfer"
     assert line0.date == datetime.datetime(2016, 4, 23, 0, 0)
     assert line0.date_user == datetime.datetime(2016, 4, 23, 0, 0)
     assert line0.payee is None
-    assert line0.refnum == '20160423000805545979476000000012'
+    assert line0.refnum == "20160423000805545979476000000012"
 
 
 def test_parse_davider80() -> None:
     # GIVEN
-    config = {
-        "currency": "CHF"
-    }
+    config = {"currency": "CHF"}
     plugin = Iso20022Plugin(UI(), config)
 
-    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, 'davider80.xml'))
+    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, "davider80.xml"))
 
     # WHEN
     stmt = parser.parse()
@@ -111,7 +106,7 @@ def test_parse_davider80() -> None:
     # THEN
     assert stmt is not None
 
-    assert stmt.account_id == 'CHxxxxxxxxxxxxxxxxxxx'
+    assert stmt.account_id == "CHxxxxxxxxxxxxxxxxxxx"
     assert stmt.currency is "CHF"
 
     assert stmt.bank_id == "Raiffeisen"
@@ -127,22 +122,20 @@ def test_parse_davider80() -> None:
     line0 = stmt.lines[0]
 
     assert line0.amount == Decimal("-905.3")
-    assert line0.memo == 'Sistema di addebitamento diretto xxxxxxxxxxxxxxxxxxxxxx AG'
+    assert line0.memo == "Sistema di addebitamento diretto xxxxxxxxxxxxxxxxxxxxxx AG"
     assert line0.date == datetime.datetime(2017, 4, 3, 0, 0)
     assert line0.date_user == datetime.datetime(2017, 4, 1, 0, 0)
     assert line0.payee is None
-    assert line0.refnum == '210564431020000000024556150000'
+    assert line0.refnum == "210564431020000000024556150000"
 
 
 def test_unsupported() -> None:
     # GIVEN
-    config = {
-        "currency": "CHF"
-    }
+    config = {"currency": "CHF"}
     plugin = Iso20022Plugin(UI(), config)
 
     # WHEN
-    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, 'unsupported.xml'))
+    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, "unsupported.xml"))
 
     # THEN
     with pytest.raises(exceptions.ParseError):
