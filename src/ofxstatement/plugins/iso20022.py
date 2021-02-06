@@ -1,19 +1,27 @@
-from typing import Optional, List
-import xml.etree.ElementTree as ET
 import datetime
+import enum
 import re
+import xml.etree.ElementTree as ET
 from decimal import Decimal
+from typing import Dict, List, Optional
 
 from ofxstatement import exceptions
+from ofxstatement.parser import AbstractStatementParser
 from ofxstatement.plugin import Plugin
 from ofxstatement.statement import Statement, StatementLine
-from ofxstatement.parser import AbstractStatementParser
 
+# ISO20022_NAMESPACE_ROOT = "urn:iso:std:iso:20022"
+CAMT053_NAMESPACE_ROOT = "urn:iso:std:iso:20022:tech:xsd:camt.052"
+CAMT053_NAMESPACE_ROOT = "urn:iso:std:iso:20022:tech:xsd:camt.053"
 
-ISO20022_NAMESPACE_ROOT = "urn:iso:std:iso:20022:tech:xsd:camt.053.001"
 
 CD_CREDIT = "CRDT"
 CD_DEBIT = "DBIT"
+
+
+class CamtVersion(enum.Enum):
+    CAMT052 = "urn:iso:std:iso:20022:tech:xsd:camt.052"
+    CAMT053 = "urn:iso:std:iso:20022:tech:xsd:camt.053"
 
 
 class Iso20022Plugin(Plugin):
@@ -26,6 +34,9 @@ class Iso20022Plugin(Plugin):
 
 
 class Iso20022Parser(AbstractStatementParser):
+    version: CamtVersion
+    xmlns: Dict[str, str]
+
     def __init__(self, filename: str, currency: str = None):
         self.filename = filename
         self.currency = currency
@@ -38,9 +49,7 @@ class Iso20022Parser(AbstractStatementParser):
 
         # Find out XML namespace and make sure we can parse it
         ns = self._get_namespace(tree.getroot())
-        if not ns.startswith(ISO20022_NAMESPACE_ROOT):
-            raise exceptions.ParseError(0, "Cannot recognize ISO20022 XML")
-
+        self.version = self._recognize_version(ns)
         self.xmlns = {"s": ns}
 
         self._parse_statement_properties(tree)
@@ -48,13 +57,29 @@ class Iso20022Parser(AbstractStatementParser):
 
         return self.statement
 
+    def _recognize_version(self, ns: str) -> CamtVersion:
+        for ver in CamtVersion:
+            if ns.startswith(ver.value):
+                return ver
+
+        raise exceptions.ParseError(0, "Cannot recognize ISO20022 XML")
+
     def _get_namespace(self, elem: ET.Element) -> str:
         m = re.match(r"\{(.*)\}", elem.tag)
         return m.groups()[0] if m else ""
 
-    def _parse_statement_properties(self, tree: ET.ElementTree) -> None:
-        stmt = tree.find("./s:BkToCstmrStmt/s:Stmt", self.xmlns)
+    def _get_statement_el(self, tree: ET.ElementTree) -> ET.Element:
+        if self.version == CamtVersion.CAMT053:
+            stmt = tree.find("./s:BkToCstmrStmt/s:Stmt", self.xmlns)
+        else:
+            assert self.version == CamtVersion.CAMT052
+            stmt = tree.find("./s:BkToCstmrAcctRpt/s:Rpt", self.xmlns)
+
         assert stmt is not None
+        return stmt
+
+    def _parse_statement_properties(self, tree: ET.ElementTree) -> None:
+        stmt = self._get_statement_el(tree)
 
         bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:BIC", self.xmlns)
         if bnk is None:
@@ -100,14 +125,29 @@ class Iso20022Parser(AbstractStatementParser):
 
         self.statement.bank_id = bnk.text if bnk is not None else None
         self.statement.account_id = iban.text
-        self.statement.start_balance = bal_amts["OPBD"]
-        self.statement.start_date = bal_dates["OPBD"]
+
+        # From ISO 20022 Account Statement Guide:
+        #
+        # The following balance types are mandatory in the Bank-To-Customer
+        # statement:
+        #
+        # OPBD – Book balance of the account at the beginning of the account
+        # reporting period. - PRCD - Closing book balance of the previous day;
+        # to be supplied in the material with the OPBD with similar data (see
+        # the camt.053 example message), except for the PRCD type balance,
+        # which has the same date as the previous day‟s CLBD type balance. The
+        # date of OPBD type balance is the date of the reported account
+        # statement.
+        #
+        # CLBD - Closing book balance of the account at the end of the account
+        # reporting period.
+        self.statement.start_balance = bal_amts.get("OPBD", bal_amts.get("PRCD"))
+        self.statement.start_date = bal_dates.get("OPBD", bal_dates.get("PRCD"))
         self.statement.end_balance = bal_amts["CLBD"]
         self.statement.end_date = bal_dates["CLBD"]
 
     def _parse_lines(self, tree: ET.ElementTree) -> None:
-        stmt = tree.find("./s:BkToCstmrStmt/s:Stmt", self.xmlns)
-        assert stmt is not None
+        stmt = self._get_statement_el(tree)
 
         for ntry in self._findall(stmt, "Ntry"):
             sline = self._parse_line(ntry)
