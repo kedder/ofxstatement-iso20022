@@ -129,6 +129,39 @@ def test_parse_davider80() -> None:
     assert line0.refnum == "210564431020000000024556150000"
 
 
+def test_parse_camt052() -> None:
+    # GIVEN
+    config = {"currency": "CHF"}
+    plugin = Iso20022Plugin(UI(), config)
+
+    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, "camt052.xml"))
+
+    # WHEN
+    stmt = parser.parse()
+
+    # THEN
+    assert stmt is not None
+
+    assert stmt.account_type == "CHECKING"
+    assert stmt.bank_id == "PZHSDE66XXX"
+    assert stmt.currency == "EUR"
+    assert stmt.end_balance == Decimal("16.95")
+    assert stmt.end_date == datetime.datetime(2021, 2, 5, 0, 0)
+    assert stmt.start_balance == Decimal("268.35")
+    assert stmt.start_date == datetime.datetime(2021, 2, 4, 0, 0)
+
+    assert len(stmt.lines) == 5
+    line0 = stmt.lines[0]
+
+    assert line0.check_no is None
+    assert line0.date == datetime.datetime(2021, 2, 5, 0, 0)
+    assert line0.date_user == datetime.datetime(2021, 2, 5, 0, 0)
+    assert line0.id is None
+    assert line0.memo == "Something"
+    assert line0.payee == "SPARKASSE PFORZHEIM CALW"
+    assert line0.refnum == "NONREF"
+
+
 def test_unsupported() -> None:
     # GIVEN
     config = {"currency": "CHF"}
