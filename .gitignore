@@ -13,3 +13,4 @@ eggs
 .cache
 .requirements.installed
 *.xml
+*.ofx
