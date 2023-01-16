@@ -93,7 +93,7 @@ class Iso20022Parser(AbstractStatementParser):
         ibanfind = stmt.find(
             "./s:Ntry/s:NtryDtls/s:TxDtls/s:RltdPties/s:CdtrAcct/s:Id/s:IBAN",
             self.xmlns,
-        )  # checked
+        )  # checked, appears to not be included in every camt.053 statement?
         # assert iban is not None
         ccy = stmt.find("./s:Acct/s:Ccy", self.xmlns)  # checked
         bals = stmt.findall("./s:Bal", self.xmlns)  # checked
