@@ -12,3 +12,4 @@ eggs
 *.sublime*
 .cache
 .requirements.installed
+*.xml
