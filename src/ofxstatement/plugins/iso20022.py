@@ -2,6 +2,7 @@ import datetime
 import enum
 import re
 import xml.etree.ElementTree as ET
+
 from decimal import Decimal
 from typing import Dict, List, Optional
 
@@ -169,9 +170,18 @@ class Iso20022Parser(AbstractStatementParser):
         stmt = self._get_statement_el(tree)
 
         for ntry in self._findall(stmt, "Ntry"):
-            sline = self._parse_line(ntry)
-            if sline is not None:
-                self.statement.lines.append(sline)
+            print(ntry)
+            txs = self._findall(ntry, "NtryDtls/TxDtls")
+            if not txs:
+                sline = self._parse_line(ntry)
+                if sline is not None:
+                    self.statement.lines.append(sline)
+            else:
+                for tx in txs:
+                    print(tx)
+                    sline = self._parse_txdtl_line(tx)
+                    if sline is not None:
+                        self.statement.lines.append(sline)
 
     def _parse_line(self, ntry: ET.Element) -> Optional[StatementLine]:
         sline = StatementLine()
@@ -211,6 +221,54 @@ class Iso20022Parser(AbstractStatementParser):
         # Try to find memo from different possible locations
         refinf = self._find(ntry, "NtryDtls/TxDtls/RmtInf/Strd/CdtrRefInf/Ref")
         rmtinf = self._find(ntry, "NtryDtls/TxDtls/RmtInf/Ustrd")
+        addinf = self._find(ntry, "AddtlNtryInf")
+        if refinf is not None:
+            sline.memo = refinf.text
+        elif rmtinf is not None:
+            sline.memo = rmtinf.text
+        elif addinf is not None:
+            sline.memo = addinf.text
+
+        return sline
+
+    def _parse_txdtl_line(self, ntry: ET.Element) -> Optional[StatementLine]:
+        sline = StatementLine()
+
+        crdeb = self._findstrict(ntry, "CdtDbtInd").text
+
+        amtnode = self._findstrict(ntry, "Amt")
+        amt_ccy = amtnode.get("Ccy")
+
+        if amt_ccy != self.statement.currency:
+            # We can't include amounts with incompatible currencies into the
+            # statement.
+            return None
+
+        amt = self._parse_amount(amtnode)
+        if crdeb == CD_DEBIT:
+            amt = -amt
+            payee = self._find(ntry, "RltdPties/Cdtr/Nm")
+        else:
+            payee = self._find(ntry, "RltdPties/Dbtr/Nm")
+
+        sline.payee = payee.text if payee is not None else None
+        sline.amount = amt
+
+        dt = self._find(ntry, "ValDt")
+        sline.date = self._parse_date(dt)
+
+        bookdt = self._find(ntry, "BookgDt")
+        sline.date_user = self._parse_date(bookdt)
+
+        svcref = self._find(ntry, "Refs/AcctSvcrRef")
+        if svcref is None:
+            svcref = self._find(ntry, "AcctSvcrRef")
+        if svcref is not None:
+            sline.refnum = svcref.text
+
+        # Try to find memo from different possible locations
+        refinf = self._find(ntry, "RmtInf/Strd/CdtrRefInf/Ref")
+        rmtinf = self._find(ntry, "RmtInf/Ustrd")
         addinf = self._find(ntry, "AddtlNtryInf")
         if refinf is not None:
             sline.memo = refinf.text
