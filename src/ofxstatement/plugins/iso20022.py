@@ -37,7 +37,7 @@ class Iso20022Parser(AbstractStatementParser):
     version: CamtVersion
     xmlns: Dict[str, str]
 
-    def __init__(self, filename: str, currency: str = None):
+    def __init__(self, filename: str, currency: Optional[str] = None):
         self.filename = filename
         self.currency = currency
 
