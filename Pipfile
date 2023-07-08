@@ -6,10 +6,10 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 black = "*"
-dataclasses = "*"  # needed for black on python 3.6
 mypy = "*"
+exceptiongroup = {markers="python_version < '3.11'"}
+tomli = {markers="python_version < '3.11'"}
 
 [packages]
-pytest = "*"
 ofxstatement-iso20022 = {editable = true,path = "."}
 ofxstatement = "*"
