@@ -87,17 +87,17 @@ class Iso20022Parser(AbstractStatementParser):
     def _parse_statement_properties(self, tree: ET.ElementTree) -> None:
         stmt = self._get_statement_el(tree)
 
-        bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:BICFI", self.xmlns)  # checked
+        bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:BICFI", self.xmlns)
         if bnk is None:
-            bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:Nm", self.xmlns)  # checked
+            bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:Nm", self.xmlns)
 
         ibanfind = stmt.find(
             "./s:Ntry/s:NtryDtls/s:TxDtls/s:RltdPties/s:CdtrAcct/s:Id/s:IBAN",
             self.xmlns,
-        )  # checked, appears to not be included in every camt.053 statement?
-        # assert iban is not None
-        ccy = stmt.find("./s:Acct/s:Ccy", self.xmlns)  # checked
-        bals = stmt.findall("./s:Bal", self.xmlns)  # checked
+        )
+
+        ccy = stmt.find("./s:Acct/s:Ccy", self.xmlns)
+        bals = stmt.findall("./s:Bal", self.xmlns)
 
         acctCurrency = ccy.text if ccy is not None else None
         if acctCurrency:
