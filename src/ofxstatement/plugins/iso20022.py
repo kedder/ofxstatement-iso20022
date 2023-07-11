@@ -11,7 +11,7 @@ from ofxstatement.plugin import Plugin
 from ofxstatement.statement import Statement, StatementLine
 
 # ISO20022_NAMESPACE_ROOT = "urn:iso:std:iso:20022"
-CAMT053_NAMESPACE_ROOT = "urn:iso:std:iso:20022:tech:xsd:camt.052"
+CAMT052_NAMESPACE_ROOT = "urn:iso:std:iso:20022:tech:xsd:camt.052"
 CAMT053_NAMESPACE_ROOT = "urn:iso:std:iso:20022:tech:xsd:camt.053"
 
 
