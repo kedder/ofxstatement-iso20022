@@ -90,9 +90,14 @@ class Iso20022Parser(AbstractStatementParser):
         ccy = stmt.find("./s:Acct/s:Ccy", self.xmlns)
         bals = stmt.findall("./s:Bal", self.xmlns)
         ibanfind = stmt.find(
-            "./s:Ntry/s:NtryDtls/s:TxDtls/s:RltdPties/s:CdtrAcct/s:Id/s:IBAN",
+            "./s:Acct/s:Id/s:IBAN",
             self.xmlns,
         )
+        if ibanfind is None:
+            ibanfind = stmt.find(
+                "./s:Ntry/s:NtryDtls/s:TxDtls/s:RltdPties/s:CdtrAcct/s:Id/s:IBAN",
+                self.xmlns,
+            )
         # assert iban is not None
 
         acctCurrency = ccy.text if ccy is not None else None
