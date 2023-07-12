@@ -92,7 +92,7 @@ class Iso20022Parser(AbstractStatementParser):
         ibanfind = stmt.find(
             "./s:Ntry/s:NtryDtls/s:TxDtls/s:RltdPties/s:CdtrAcct/s:Id/s:IBAN",
             self.xmlns,
-        )  # checked
+        )
         # assert iban is not None
 
         acctCurrency = ccy.text if ccy is not None else None
