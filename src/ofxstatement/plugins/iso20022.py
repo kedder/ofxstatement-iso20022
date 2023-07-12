@@ -145,7 +145,11 @@ class Iso20022Parser(AbstractStatementParser):
             )
 
         self.statement.bank_id = bnk.text if bnk is not None else None
-        self.statement.account_id = acctIban
+
+        # This statement is required to avoid overwriting account_id with None
+        # when no IBAN can be found in the XML.
+        # Instead the configured value for IBAN will be used.
+        self.statement.account_id = acctIban if acctIban is not None else self.statement.account_id
 
         # From ISO 20022 Account Statement Guide:
         #
