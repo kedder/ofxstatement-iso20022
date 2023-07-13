@@ -38,7 +38,9 @@ class Iso20022Parser(AbstractStatementParser):
     version: CamtVersion
     xmlns: Dict[str, str]
 
-    def __init__(self, filename: str, currency: Optional[str] = None, iban: Optional[str] = None):
+    def __init__(
+        self, filename: str, currency: Optional[str] = None, iban: Optional[str] = None
+    ):
         self.filename = filename
         self.currency = currency
         self.iban = iban
@@ -149,7 +151,9 @@ class Iso20022Parser(AbstractStatementParser):
         # This statement is required to avoid overwriting account_id with None
         # when no IBAN can be found in the XML.
         # Instead the configured value for IBAN will be used.
-        self.statement.account_id = acctIban if acctIban is not None else self.statement.account_id
+        self.statement.account_id = (
+            acctIban if acctIban is not None else self.statement.account_id
+        )
 
         # From ISO 20022 Account Statement Guide:
         #
