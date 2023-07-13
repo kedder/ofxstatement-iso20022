@@ -173,3 +173,37 @@ def test_unsupported() -> None:
     # THEN
     with pytest.raises(exceptions.ParseError):
         parser.parse()
+
+def test_parse_camt053() -> None:
+    # GIVEN
+    config = {"iban": "CHxxxxxxxxxxxxxxxxxxx"}
+    plugin = Iso20022Plugin(UI(), config)
+
+    parser = plugin.get_parser(os.path.join(SAMPLES_DIR, "camt053.xml"))
+
+    # WHEN
+    stmt = parser.parse()
+
+    # THEN
+    assert stmt is not None
+
+    assert stmt.account_id == "CHxxxxxxxxxxxxxxxxxxx"
+    assert stmt.currency == "CHF"
+    assert stmt.bank_id == "SAMPLEBANK222"
+    assert stmt.end_balance == Decimal("2116.31")
+    assert stmt.end_date == datetime.datetime(2023, 1, 25, 0, 0)
+    assert stmt.start_balance == Decimal("832.01")
+    assert stmt.start_date == datetime.datetime(2023, 1, 25, 0, 0)
+
+    assert len(stmt.lines) == 1
+
+    assert all(l.amount for l in stmt.lines)
+
+    line0 = stmt.lines[0]
+
+    assert line0.amount == Decimal("1284.30")
+    assert line0.memo == u"PAYMENT INFO"
+    assert line0.date == datetime.datetime(2023, 1, 25, 0, 0)
+    assert line0.date_user == datetime.datetime(2023, 1, 25, 0, 0)
+    #assert line0.payee == u"PAYEE"
+    assert line0.refnum == "A032-J30K20-03-JF021"

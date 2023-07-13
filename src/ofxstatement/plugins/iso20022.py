@@ -29,7 +29,8 @@ class Iso20022Plugin(Plugin):
 
     def get_parser(self, filename: str) -> "Iso20022Parser":
         default_ccy = self.settings.get("currency")
-        parser = Iso20022Parser(filename, currency=default_ccy)
+        default_iban = self.settings.get("iban")
+        parser = Iso20022Parser(filename, currency=default_ccy, iban=default_iban)
         return parser
 
 
@@ -37,14 +38,18 @@ class Iso20022Parser(AbstractStatementParser):
     version: CamtVersion
     xmlns: Dict[str, str]
 
-    def __init__(self, filename: str, currency: Optional[str] = None):
+    def __init__(
+        self, filename: str, currency: Optional[str] = None, iban: Optional[str] = None
+    ):
         self.filename = filename
         self.currency = currency
+        self.iban = iban
 
     def parse(self) -> Statement:
         """Main entry point for parsers"""
         self.statement = Statement()
         self.statement.currency = self.currency
+        self.statement.account_id = self.iban
         tree = ET.parse(self.filename)
 
         # Find out XML namespace and make sure we can parse it
@@ -84,10 +89,18 @@ class Iso20022Parser(AbstractStatementParser):
         bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:BIC", self.xmlns)
         if bnk is None:
             bnk = stmt.find("./s:Acct/s:Svcr/s:FinInstnId/s:Nm", self.xmlns)
-        iban = stmt.find("./s:Acct/s:Id/s:IBAN", self.xmlns)
-        assert iban is not None
         ccy = stmt.find("./s:Acct/s:Ccy", self.xmlns)
         bals = stmt.findall("./s:Bal", self.xmlns)
+        ibanfind = stmt.find(
+            "./s:Acct/s:Id/s:IBAN",
+            self.xmlns,
+        )
+        if ibanfind is None:
+            ibanfind = stmt.find(
+                "./s:Ntry/s:NtryDtls/s:TxDtls/s:RltdPties/s:CdtrAcct/s:Id/s:IBAN",
+                self.xmlns,
+            )
+        # assert iban is not None
 
         acctCurrency = ccy.text if ccy is not None else None
         if acctCurrency:
@@ -98,6 +111,16 @@ class Iso20022Parser(AbstractStatementParser):
                     0,
                     "No account currency provided in statement. Please "
                     "specify one in configuration file (e.g. currency=EUR)",
+                )
+
+        acctIban = ibanfind.text if ibanfind is not None else None
+        if acctIban:
+            self.statement.account_id = acctIban
+        else:
+            if self.statement.account_id is None:
+                raise exceptions.ParseError(
+                    0,
+                    "No iban found in the statement. Please specify one in the configuration file (e.g. iban=CH...)",
                 )
 
         bal_amts = {}
@@ -124,7 +147,13 @@ class Iso20022Parser(AbstractStatementParser):
             )
 
         self.statement.bank_id = bnk.text if bnk is not None else None
-        self.statement.account_id = iban.text
+
+        # This statement is required to avoid overwriting account_id with None
+        # when no IBAN can be found in the XML.
+        # Instead the configured value for IBAN will be used.
+        self.statement.account_id = (
+            acctIban if acctIban is not None else self.statement.account_id
+        )
 
         # From ISO 20022 Account Statement Guide:
         #
