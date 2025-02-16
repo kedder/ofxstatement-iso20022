@@ -222,13 +222,14 @@ class Iso20022Parser(AbstractStatementParser):
         refinf = self._find(ntry, "NtryDtls/TxDtls/RmtInf/Strd/CdtrRefInf/Ref")
         rmtinf = self._find(ntry, "NtryDtls/TxDtls/RmtInf/Ustrd")
         addinf = self._find(ntry, "AddtlNtryInf")
-        if refinf is not None:
-            sline.memo = refinf.text
+
+        if addinf is not None:
+            sline.memo = addinf.text
         elif rmtinf is not None:
             sline.memo = rmtinf.text
-        elif addinf is not None:
-            sline.memo = addinf.text
-
+        if refinf is not None:
+            sline.check_no = refinf.text
+            sline.memo = sline.memo or refinf.text            
         return sline
 
     def _parse_date(self, dtnode: Optional[ET.Element]) -> Optional[datetime.datetime]:
