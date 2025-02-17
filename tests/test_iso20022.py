@@ -157,7 +157,7 @@ def test_parse_camt052() -> None:
     assert line0.date == datetime.datetime(2021, 2, 5, 0, 0)
     assert line0.date_user == datetime.datetime(2021, 2, 5, 0, 0)
     assert line0.id is None
-    assert line0.memo == "Something"
+    assert line0.memo == "BELASTUNG"
     assert line0.payee == "SPARKASSE PFORZHEIM CALW"
     assert line0.refnum == "NONREF"
 
