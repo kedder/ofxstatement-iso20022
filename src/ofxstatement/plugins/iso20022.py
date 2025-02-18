@@ -229,7 +229,7 @@ class Iso20022Parser(AbstractStatementParser):
             sline.memo = rmtinf.text
         if refinf is not None:
             sline.check_no = refinf.text
-            sline.memo = sline.memo or refinf.text            
+            sline.memo = sline.memo or refinf.text
         return sline
 
     def _parse_date(self, dtnode: Optional[ET.Element]) -> Optional[datetime.datetime]:

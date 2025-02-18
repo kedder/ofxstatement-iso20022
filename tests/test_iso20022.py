@@ -40,10 +40,10 @@ def test_parse_simple() -> None:
     line0 = stmt.lines[0]
 
     assert line0.amount == Decimal("-0.29")
-    assert line0.memo == u"Sąskaitos aptarnavimo mokestis"
+    assert line0.memo == "Sąskaitos aptarnavimo mokestis"
     assert line0.date == datetime.datetime(2016, 1, 1, 0, 0)
     assert line0.date_user == datetime.datetime(2015, 12, 31, 0, 0)
-    assert line0.payee == u"AB DNB Bankas"
+    assert line0.payee == "AB DNB Bankas"
     assert line0.refnum == "FC1261858984"
 
 
@@ -174,6 +174,7 @@ def test_unsupported() -> None:
     with pytest.raises(exceptions.ParseError):
         parser.parse()
 
+
 def test_parse_camt053() -> None:
     # GIVEN
     config = {"iban": "CHxxxxxxxxxxxxxxxxxxx"}
@@ -202,8 +203,8 @@ def test_parse_camt053() -> None:
     line0 = stmt.lines[0]
 
     assert line0.amount == Decimal("1284.30")
-    assert line0.memo == u"PAYMENT INFO"
+    assert line0.memo == "PAYMENT INFO"
     assert line0.date == datetime.datetime(2023, 1, 25, 0, 0)
     assert line0.date_user == datetime.datetime(2023, 1, 25, 0, 0)
-    #assert line0.payee == u"PAYEE"
+    # assert line0.payee == u"PAYEE"
     assert line0.refnum == "A032-J30K20-03-JF021"
