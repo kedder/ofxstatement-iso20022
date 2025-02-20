@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""Setup
-"""
+"""Setup"""
 from setuptools import find_packages
 from distutils.core import setup
 
