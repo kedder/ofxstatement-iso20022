@@ -41,8 +41,8 @@ def test_parse_simple() -> None:
 
     assert line0.amount == Decimal("-0.29")
     assert line0.memo == "Sąskaitos aptarnavimo mokestis"
-    assert line0.date == datetime.datetime(2016, 1, 1, 0, 0)
-    assert line0.date_user == datetime.datetime(2015, 12, 31, 0, 0)
+    assert line0.date_user == datetime.datetime(2016, 1, 1, 0, 0)
+    assert line0.date == datetime.datetime(2015, 12, 31, 0, 0)
     assert line0.payee == "AB DNB Bankas"
     assert line0.refnum == "FC1261858984"
 
@@ -123,8 +123,8 @@ def test_parse_davider80() -> None:
 
     assert line0.amount == Decimal("-905.3")
     assert line0.memo == "Sistema di addebitamento diretto xxxxxxxxxxxxxxxxxxxxxx AG"
-    assert line0.date == datetime.datetime(2017, 4, 3, 0, 0)
-    assert line0.date_user == datetime.datetime(2017, 4, 1, 0, 0)
+    assert line0.date_user == datetime.datetime(2017, 4, 3, 0, 0)
+    assert line0.date == datetime.datetime(2017, 4, 1, 0, 0)
     assert line0.payee is None
     assert line0.refnum == "210564431020000000024556150000"
 

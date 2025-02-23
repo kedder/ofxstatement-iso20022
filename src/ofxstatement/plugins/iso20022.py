@@ -207,10 +207,10 @@ class Iso20022Parser(AbstractStatementParser):
         sline.amount = amt
 
         dt = self._find(ntry, "ValDt")
-        sline.date = self._parse_date(dt)
+        sline.date_user = self._parse_date(dt)
 
         bookdt = self._find(ntry, "BookgDt")
-        sline.date_user = self._parse_date(bookdt)
+        sline.date = self._parse_date(bookdt)
 
         svcref = self._find(ntry, "NtryDtls/TxDtls/Refs/AcctSvcrRef")
         if svcref is None:
